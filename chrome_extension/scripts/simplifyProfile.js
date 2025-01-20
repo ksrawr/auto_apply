@@ -34,6 +34,20 @@ const main = async() => {
     }
 };
 
+const getCurrent = async() => {
+    try {
+        const applyBtn = await getNode('.bg-primary-300', "query-one");
+
+        await delay(1000);
+
+        if(!applyBtn) return {s: "FAILED", message: "No job on this page"}
+
+        return {s: "SUCCESS", message: "There is a job"};
+    } catch(e) {
+        return {s: "ERROR", message: "Something went wrong", e};
+    }
+}
+
 const next = async() => {
     try {
         // document.querySelector('.hidden.size-14.items-center.justify-center.rounded-full.bg-white.shadow')
@@ -46,7 +60,7 @@ const next = async() => {
 
         await delay(3000);
 
-        const {s, message} = await main();
+        // const {s, message} = await main();
 
         if(s === "SUCCESS") {
             return {s: "SUCCESS", message: "Next completed!"}
@@ -68,6 +82,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
             if(s === "SUCCESS") {
                 sendResponse({ status: "LINK_CLICKED" });
+            }
+        } else if (status === "GET_CURRENT") {
+            const { s } = await getCurrent() || {};
+
+            if(s === "SUCCESS") {
+                sendResponse({ status: "CURRENT", current: true });
+            } else if(s === "FAILED") {
+                sendResponse({status: "CURRENT", current: false});
             }
         } else if(status === "NEXT") {
             const { s } = await next() || {};

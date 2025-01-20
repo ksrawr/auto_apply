@@ -21,7 +21,8 @@
             "js": ["scripts/simplifyProfile.js"],
             "run_at": "document_end",
             "matches": [
-                "https://simplify.jobs/p/*"
+                "https://simplify.jobs/p/*",
+                "https://simplify.jobs/matches"
             ]
         }
     ],
